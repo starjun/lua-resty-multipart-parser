@@ -30,6 +30,18 @@ end
 
 
 function _M.new(body, content_type)
+   if not body then 
+      local datafile = ngx.req.get_body_file()
+      if datafile then
+          local fh, err = io.open(datafile, "r")
+          if fh then
+              fh:seek("set")
+              body = fh:read("*a")
+              fh:close()
+          end
+      end
+   end
+   
    if not content_type then
        return nil, "no Content-Type header specified"
    end
